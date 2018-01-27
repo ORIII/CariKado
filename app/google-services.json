@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "561697871878",
+    "firebase_url": "https://cari-kado.firebaseio.com",
+    "project_id": "cari-kado",
+    "storage_bucket": "cari-kado.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:561697871878:android:922a6cf3a7e9eaca",
+        "android_client_info": {
+          "package_name": "com.carikado.ori.carikado"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "561697871878-6toglhn41t8061dtv7m86ijq2g7247r2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.carikado.ori.carikado",
+            "certificate_hash": "7154b0c3a020f91401f751ad55f85df3609a4255"
+          }
+        },
+        {
+          "client_id": "561697871878-iuau1ct4l5fgkqt38b1ig54nv2goi6en.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWn9XYkFk0ZxZVAC85-hwJrXW85CJwsvs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "561697871878-iuau1ct4l5fgkqt38b1ig54nv2goi6en.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
