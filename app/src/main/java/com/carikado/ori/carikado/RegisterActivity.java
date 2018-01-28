@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -16,28 +17,32 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    
+
     private EditText mFirstName, mLastName, mEmailField, mPassField, mPass2Field, mAddressField;
     private RadioGroup radioGroup;
     private RadioButton radioButton;
     private Button signUpButton;
     private ProgressDialog progressDialog;
 
+    private String firstName, lastName, email, pass, pass2, address, sex;
+    private boolean emailStatus;
+    private int selectedGender;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        
+
         mAuth = FirebaseAuth.getInstance();
 
         mFirstName = findViewById(R.id.firstNameField);
@@ -61,9 +66,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void signUpFunc()
     {
-        final String firstName, lastName, email, pass, pass2, address, sex;
-        int selectedGender;
-
         firstName = mFirstName.getText().toString().trim();
         lastName = mLastName.getText().toString().trim();
         email = mEmailField.getText().toString().trim();
@@ -111,6 +113,8 @@ public class RegisterActivity extends AppCompatActivity {
                                 String currentId = mAuth.getCurrentUser().getUid();
                                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                                 DatabaseReference mRef = database.getReference("users").child(currentId);
+                                final FirebaseUser user = mAuth.getCurrentUser();
+                                emailStatus = user.isEmailVerified();
 
                                 Map<String, String> newUser= new HashMap<>();
 
@@ -119,10 +123,26 @@ public class RegisterActivity extends AppCompatActivity {
                                 newUser.put("gender", sex);
                                 newUser.put("email", email);
                                 newUser.put("address", address);
+                                newUser.put("email_verified", String.valueOf(emailStatus)); // digunakan untuk pengecekan
+                                                                                                // email sudah di verified atau belum
+                                                                                                // kalau udah, nantinya key "email_verified" diupdate jadi true
 
                                 mRef.setValue(newUser);
 
-                                Toast.makeText(RegisterActivity.this, "Registration Complete", Toast.LENGTH_SHORT).show();
+                                user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+
+                                        if (task.isSuccessful())
+                                            Toast.makeText(RegisterActivity.this, "Registration Complete, Verification email send to " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                                        else
+                                        {
+                                            Log.d("VER_Messages", task.getException().getMessage());
+                                            Toast.makeText(RegisterActivity.this, "Failed to send email verification, please try again", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
+                                });
                             }
                             progressDialog.dismiss();
                         }
